@@ -30,16 +30,20 @@ public class MeteorHealth : MonoBehaviour
 
     private void HealthCheck(GameObject object1, GameObject object2)
     {
+        // check if its this object
         if (this.gameObject == object1)
         {
+            //check if the other object is the laser
             if (object2.tag == "Laser")
             {
                 Debug.Log("TRIGGER LASER!");
                 health -= 1;
+                // destroy laser
                 Destroy(object2);
                 if (health <= 0)
                 {
                     if (_impulseSource != null) _impulseSource.GenerateImpulse();
+                    // destroy this meteor
                     Destroy(this.gameObject);
                 }
             }

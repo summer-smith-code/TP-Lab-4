@@ -12,17 +12,18 @@ public class PlayerHealth : MonoBehaviour
         CollisionDetection.OnCollision += CheckHealth;
     }
 
-    private void CheckHealth(GameObject object1, GameObject object2)
+    private void OnDisable()
     {
-        if (object1 == this.gameObject)
-        {
-            OnPlayerDeath(object1);
-        }
+        CollisionDetection.OnCollision -= CheckHealth;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void CheckHealth(GameObject object1, GameObject object2)
     {
-        
+        // check if the collider was the player
+        if (object1 == this.gameObject)
+        {
+            // player dies!
+            OnPlayerDeath(object1);
+        }
     }
 }
