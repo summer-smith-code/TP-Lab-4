@@ -29,12 +29,6 @@ public class Player : MonoBehaviour
         _playerInputActions.Player.Disable();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        Shooting();
-    }
-
     // Applies physics-based movement to the player using input system values.
     private void FixedUpdate()
     {
@@ -47,9 +41,15 @@ public class Player : MonoBehaviour
         _moveInput = value.Get<Vector2>();
     }
 
+    // Calls Shooting() via input system event.
+    private void OnShoot(InputValue value)
+    {
+        if (value.isPressed) Shooting();
+    }
+
     void Shooting()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && canShoot)
+        if (canShoot)
         {
             Instantiate(laserPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
             canShoot = false;
