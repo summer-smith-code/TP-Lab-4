@@ -12,6 +12,7 @@ public class MeteorHealth : MonoBehaviour
 
     void Start()
     {
+        _impulseSource = GetComponent<CinemachineImpulseSource>();
         if (health < 1)
         {
             Debug.Log("0 health on spawn!");
