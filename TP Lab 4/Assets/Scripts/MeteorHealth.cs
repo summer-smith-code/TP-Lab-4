@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class MeteorHealth : MonoBehaviour
 {
+    public static event Action<int> OnMeteorDeath;
     [SerializeField] private int health;
     private CinemachineImpulseSource _impulseSource;
 
@@ -42,6 +43,7 @@ public class MeteorHealth : MonoBehaviour
                 Destroy(object2);
                 if (health <= 0)
                 {
+                    OnMeteorDeath?.Invoke(1);
                     if (_impulseSource != null) _impulseSource.GenerateImpulse();
                     // destroy this meteor
                     Destroy(this.gameObject);

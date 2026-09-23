@@ -40,6 +40,12 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         PlayerHealth.OnPlayerDeath += GameOver;
+        MeteorHealth.OnMeteorDeath += MeteorCounting;
+    }
+
+    private void MeteorCounting(int obj)
+    {
+        meteorCount++;
     }
 
     private void GameOver(GameObject player)
@@ -51,6 +57,7 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         PlayerHealth.OnPlayerDeath -= GameOver;
+        MeteorHealth.OnMeteorDeath  -= MeteorCounting;
     }
     // Update is called once per frame
     void Update()
