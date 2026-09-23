@@ -1,5 +1,7 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,12 +16,22 @@ public class GameManager : MonoBehaviour
 
     public int meteorCount = 0;
 
+    // Assignable reference to the Cinemachine camera in the scene.
+    public CinemachineVirtualCamera vcam;
+
     // Start is called before the first frame update
     void Start()
     {
         if (Instance == null)
             Instance = this;    
-        Instantiate(playerPrefab, transform.position, Quaternion.identity);
+        GameObject player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
+
+        if (vcam != null)
+        {
+            vcam.Follow = player.transform;
+            vcam.LookAt = player.transform;
+        }
+
         InvokeRepeating("SpawnMeteor", 1f, 2f);
     }
 
