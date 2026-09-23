@@ -5,22 +5,26 @@ using UnityEngine;
 
 public class Meteor : MonoBehaviour, IMeteor
 {
-    public Vector3 direction { get; set; }
-
     [SerializeField] public float distanceSquared { get; set; }
     [SerializeField] public bool isMovingLeft { get; set; }
-
     [SerializeField] public float speed { get; set; }
-    [SerializeField] private GameObject pivot;
 
+    private GameObject pivot;
     private Vector2 pivotPosition;
     private Vector2 currentPosition;
 
     void Start()
     {
+        // Randomly assign initial speed and direction when spawned
+        speed = UnityEngine.Random.Range(.05f, .2f);
+        int direction = UnityEngine.Random.Range(0, 2);
+        if (direction == 0)
+            isMovingLeft = true;
+        else
+            isMovingLeft = false;
         // calculate distance
-        pivot = GameManager.Instance._playerPrefab;
-        pivotPosition = GameManager.Instance._playerPrefab.transform.position;
+        pivot = GameManager.Instance._player;
+        pivotPosition = GameManager.Instance._player.transform.position;
         currentPosition = transform.position;
         distanceSquared = (currentPosition - pivotPosition).sqrMagnitude;
 

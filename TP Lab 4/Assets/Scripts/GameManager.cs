@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     [SerializeField] private GameObject playerPrefab;
-    public GameObject _playerPrefab => playerPrefab; 
+    private GameObject player;
+    public GameObject _player => player;
     public GameObject meteorPrefab;
     public GameObject bigMeteorPrefab;
     public bool gameOver = false;
@@ -24,7 +25,7 @@ public class GameManager : MonoBehaviour
     {
         if (Instance == null)
             Instance = this;    
-        GameObject player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
+        player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
 
         if (vcam != null)
         {
@@ -35,6 +36,22 @@ public class GameManager : MonoBehaviour
         InvokeRepeating("SpawnMeteor", 1f, 2f);
     }
 
+
+    private void OnEnable()
+    {
+        PlayerHealth.OnPlayerDeath += GameOver;
+    }
+
+    private void GameOver(GameObject player)
+    {
+        Destroy(player);
+        gameOver = true;
+    }
+
+    private void OnDisable()
+    {
+        PlayerHealth.OnPlayerDeath -= GameOver;
+    }
     // Update is called once per frame
     void Update()
     {

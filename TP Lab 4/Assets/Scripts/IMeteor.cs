@@ -8,6 +8,5 @@ public interface IMeteor
     float distanceSquared { get; set; }
     bool isMovingLeft { get; set; }
     float speed { get; set; }
-    Vector3 direction { get; set; }
     void Move();
 }
