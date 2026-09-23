@@ -1,24 +1,71 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Meteor : MonoBehaviour
+public class Meteor : MonoBehaviour, IMeteor
 {
-    
-    // Start is called before the first frame update
+    public Vector3 direction { get; set; }
+
+    [SerializeField] public float distanceSquared { get; set; }
+    [SerializeField] public bool isMovingLeft { get; set; }
+
+    [SerializeField] public float speed { get; set; }
+    [SerializeField] private GameObject pivot;
+
+    private Vector2 pivotPosition;
+    private Vector2 currentPosition;
+
     void Start()
     {
-        
+        // calculate distance
+        pivot = GameManager.Instance._playerPrefab;
+        pivotPosition = GameManager.Instance._playerPrefab.transform.position;
+        currentPosition = transform.position;
+        distanceSquared = (currentPosition - pivotPosition).sqrMagnitude;
+
+        // speed logic
+        speed *= distanceSquared;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.down * Time.deltaTime * 2f);
+        Move();
+    }
 
-        if (transform.position.y < -11f)
+    public void Move()
+    {
+        // rotate towards player logic
+        pivotPosition = pivot.transform.position;
+        currentPosition = transform.position;
+        // calculate direction and angle
+        var direction = pivotPosition - currentPosition;
+        float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        // look at player if not already
+        if (angle != 0)
         {
-            Destroy(this.gameObject);
+            transform.rotation = Quaternion.Euler(0, 0, -angle);
+        }
+
+        // move left or right logic
+        if (isMovingLeft)
+        {
+            transform.Translate(Vector3.left * speed * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(Vector3.right * speed * Time.deltaTime);
+        }
+
+
+        // avoid player collision logic
+        if ((currentPosition - pivotPosition).sqrMagnitude > distanceSquared)
+        {
+            transform.Translate(Vector3.up * speed * Time.deltaTime);
+        }
+        else if ((currentPosition - pivotPosition).sqrMagnitude < distanceSquared)
+        {
+            transform.Translate(Vector3.down * speed * Time.deltaTime);
         }
     }
 
@@ -29,7 +76,8 @@ public class Meteor : MonoBehaviour
             GameObject.Find("GameManager").GetComponent<GameManager>().gameOver = true;
             Destroy(whatIHit.gameObject);
             Destroy(this.gameObject);
-        } else if (whatIHit.tag == "Laser")
+        }
+        else if (whatIHit.tag == "Laser")
         {
             GameObject.Find("GameManager").GetComponent<GameManager>().meteorCount++;
             Destroy(whatIHit.gameObject);

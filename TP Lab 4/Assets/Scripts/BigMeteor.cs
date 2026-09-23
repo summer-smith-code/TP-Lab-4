@@ -2,31 +2,71 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BigMeteor : MonoBehaviour
+public class BigMeteor : MonoBehaviour, IMeteor 
 {
-    private int hitCount = 0;
+    public Vector3 direction { get; set; }
 
-    // Start is called before the first frame update
+    [SerializeField] public float distanceSquared { get; set; }
+    [SerializeField] public bool isMovingLeft { get; set; }
+
+    [SerializeField] public float speed { get; set; }
+    [SerializeField] private GameObject pivot;
+
+    private Vector2 pivotPosition;
+    private Vector2 currentPosition;
+
     void Start()
     {
-        
+        // calculate distance
+        pivotPosition = pivot.transform.position;
+        currentPosition = transform.position;
+        distanceSquared = (currentPosition - pivotPosition).sqrMagnitude;
+
+        // speed logic
+        speed *= distanceSquared;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.down * Time.deltaTime * 0.5f);
+        Move();
+    }
 
-        if (transform.position.y < -11f)
+    public void Move()
+    {
+        // rotate towards player logic
+        pivotPosition = pivot.transform.position;
+        currentPosition = transform.position;
+        // calculate direction and angle
+        var direction = pivotPosition - currentPosition;
+        float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        // look at player if not already
+        if (angle != 0)
         {
-            Destroy(this.gameObject);
+            transform.rotation = Quaternion.Euler(0, 0, -angle);
         }
 
-        if (hitCount >= 5)
+        // move left or right logic
+        if (isMovingLeft)
         {
-            Destroy(this.gameObject);
+            transform.Translate(Vector3.left * speed * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(Vector3.right * speed * Time.deltaTime);
+        }
+
+
+        // avoid player collision logic
+        if ((currentPosition - pivotPosition).sqrMagnitude > distanceSquared)
+        {
+            transform.Translate(Vector3.up * speed * Time.deltaTime);
+        }
+        else if ((currentPosition - pivotPosition).sqrMagnitude < distanceSquared)
+        {
+            transform.Translate(Vector3.down * speed * Time.deltaTime);
         }
     }
+
 
     private void OnTriggerEnter2D(Collider2D whatIHit)
     {
@@ -37,7 +77,6 @@ public class BigMeteor : MonoBehaviour
         }
         else if (whatIHit.tag == "Laser")
         {
-            hitCount++;
             Destroy(whatIHit.gameObject);
         }
     }
