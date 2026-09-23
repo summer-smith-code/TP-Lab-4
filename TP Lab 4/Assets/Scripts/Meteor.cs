@@ -73,6 +73,7 @@ public class Meteor : MonoBehaviour, IMeteor
         }
     }
 
+    /*
     private void OnTriggerEnter2D(Collider2D whatIHit)
     {
         if (whatIHit.tag == "Player")
@@ -88,4 +89,5 @@ public class Meteor : MonoBehaviour, IMeteor
             Destroy(this.gameObject);
         }
     }
+    */
 }

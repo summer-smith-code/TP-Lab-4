@@ -34,11 +34,13 @@ public class MeteorHealth : MonoBehaviour
         {
             if (object2.tag == "Laser")
             {
+                Debug.Log("TRIGGER LASER!");
                 health -= 1;
+                Destroy(object2);
                 if (health <= 0)
                 {
                     if (_impulseSource != null) _impulseSource.GenerateImpulse();
-                    Destroy(this);
+                    Destroy(this.gameObject);
                 }
             }
         }

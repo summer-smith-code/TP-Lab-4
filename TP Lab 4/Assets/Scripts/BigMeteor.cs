@@ -74,7 +74,8 @@ public class BigMeteor : MonoBehaviour, IMeteor
 
 
 
-    private void OnTriggerEnter2D(Collider2D whatIHit)
+    /*
+     * private void OnTriggerEnter2D(Collider2D whatIHit)
     {
         if (whatIHit.tag == "Player")
         {
@@ -86,4 +87,5 @@ public class BigMeteor : MonoBehaviour, IMeteor
             Destroy(whatIHit.gameObject);
         }
     }
+    */
 }

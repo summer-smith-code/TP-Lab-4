@@ -44,8 +44,8 @@ public class GameManager : MonoBehaviour
 
     private void GameOver(GameObject player)
     {
-        Destroy(player);
         gameOver = true;
+        player.SetActive(false);
     }
 
     private void OnDisable()
