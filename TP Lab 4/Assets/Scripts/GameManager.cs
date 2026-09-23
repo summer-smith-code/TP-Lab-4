@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -23,8 +24,13 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartGame();
+    }
+
+    private void StartGame()
+    {
         if (Instance == null)
-            Instance = this;    
+            Instance = this;
         player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
 
         if (vcam != null)
@@ -35,7 +41,6 @@ public class GameManager : MonoBehaviour
 
         InvokeRepeating("SpawnMeteor", 1f, 2f);
     }
-
 
     private void OnEnable()
     {
@@ -52,6 +57,16 @@ public class GameManager : MonoBehaviour
     {
         gameOver = true;
         player.SetActive(false);
+    }
+
+    // Restarts the game/scene when the respawn input is pressed and the game has ended.
+    private void OnRespawn(InputValue value)
+    {
+        if (value.isPressed && gameOver)
+        {
+            int index = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(index);
+        }
     }
 
     private void OnDisable()
