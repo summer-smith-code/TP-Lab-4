@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +7,8 @@ using UnityEngine;
 public class MeteorHealth : MonoBehaviour
 {
     [SerializeField] private int health;
+    private CinemachineImpulseSource _impulseSource;
+
     void Start()
     {
         if (health < 1)
@@ -34,6 +37,7 @@ public class MeteorHealth : MonoBehaviour
                 health -= 1;
                 if (health <= 0)
                 {
+                    if (_impulseSource != null) _impulseSource.GenerateImpulse();
                     Destroy(this);
                 }
             }
