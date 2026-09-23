@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -11,22 +12,29 @@ public class Player : MonoBehaviour
     private float verticalScreenLimit = 6f;
     private bool canShoot = true;
 
-    // Start is called before the first frame update
-    void Start()
+    // Variables for handling input system.
+    private PlayerInputActions _playerInputActions;
+    private Rigidbody2D _rb;
+    private Vector2 _moveInput;
+
+    // On enable, gets necessary references & enables input.
+    void OnEnable()
     {
-        
+        _rb = GetComponent<Rigidbody2D>();
+        _playerInputActions = new PlayerInputActions();
+        _playerInputActions.Player.Enable();
+    }
+
+    // On disable, disables input.
+    void OnDisable()
+    {
+        _playerInputActions.Player.Disable();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Movement();
-        Shooting();
-    }
-
-    void Movement()
-    {
-        transform.Translate(new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0) * Time.deltaTime * speed);
+        // Check if player is out-of-bounds of the screen & move them if needed.
         if (transform.position.x > horizontalScreenLimit || transform.position.x <= -horizontalScreenLimit)
         {
             transform.position = new Vector3(transform.position.x * -1f, transform.position.y, 0);
@@ -35,6 +43,20 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, transform.position.y * -1, 0);
         }
+
+        Shooting();
+    }
+
+    // Applies physics-based movement to the player using input system values.
+    private void FixedUpdate()
+    {
+        _rb.velocity = new Vector2(_moveInput.x * speed, _moveInput.y * speed);
+    }
+
+    // Stores movement input for the player; automatically called by input system.
+    private void OnMove(InputValue value)
+    {
+        _moveInput = value.Get<Vector2>();
     }
 
     void Shooting()
