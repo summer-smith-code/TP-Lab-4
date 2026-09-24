@@ -1,7 +1,0 @@
-{
-  "port": 19876,
-  "mcpEndpoint": "http://localhost:19876/mcp",
-  "mcpTransport": "streamable-http",
-  "solution": "D:\\Game Dev Projects\\Unity Projects\\TP-Lab-4\\TP Lab 4",
-  "started": "2026-09-24T16:11:05.1394495-04:00"
-}

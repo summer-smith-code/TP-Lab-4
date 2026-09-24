@@ -1,29 +1,28 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+// This script handles the player's health.
 public class PlayerHealth : MonoBehaviour
 {
-    public static event Action<GameObject> OnPlayerDeath;
-    // Start is called before the first frame update
+    // Event which triggers upon the game object dying.
+    public static event Action<GameObject> OnDeath;
+    
+    // Collision detection subscribes to CheckHealth().
     private void OnEnable()
     {
         CollisionDetection.OnCollision += CheckHealth;
     }
 
+    // Collision detection unsubscribes to CheckHealth().
     private void OnDisable()
     {
         CollisionDetection.OnCollision -= CheckHealth;
     }
 
+    // Checks the health of the given game object and determines if death event should be called.
     private void CheckHealth(GameObject object1, GameObject object2)
     {
-        // check if the collider was the player
-        if (object1 == this.gameObject)
-        {
-            // player dies!
-            OnPlayerDeath(object1);
-        }
+        // If one of the objects in the collision was this game object, call death event.
+        if (object1 == this.gameObject) OnDeath(object1);
     }
 }

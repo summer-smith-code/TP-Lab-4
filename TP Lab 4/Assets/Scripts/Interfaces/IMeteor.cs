@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+// This interface is for meteor game objects.
 public interface IMeteor
 {
     float distanceSquared { get; set; }

@@ -1,14 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+// This script handles one meteor type.
 public class Meteor : MonoBehaviour, IMeteor
 {
-    [SerializeField] public float distanceSquared { get; set; }
-    [SerializeField] public bool isMovingLeft { get; set; }
-    [SerializeField] public float speed { get; set; }
+    // interface variables
+    public float distanceSquared { get; set; }
+    public bool isMovingLeft { get; set; }
+    public float speed { get; set; }
 
+    // variables for moving around player/given pivot point
     private GameObject pivot;
     private Vector2 pivotPosition;
     private Vector2 currentPosition;
@@ -37,6 +37,7 @@ public class Meteor : MonoBehaviour, IMeteor
         Move();
     }
 
+    // movement logic
     public void Move()
     {
         // rotate towards player logic
@@ -45,6 +46,7 @@ public class Meteor : MonoBehaviour, IMeteor
         // calculate direction and angle
         var direction = pivotPosition - currentPosition;
         float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        
         // look at player if not already
         if (angle != 0)
         {
@@ -60,8 +62,7 @@ public class Meteor : MonoBehaviour, IMeteor
         {
             transform.Translate(Vector3.right * speed * Time.deltaTime);
         }
-
-
+        
         // avoid player collision logic
         if ((currentPosition - pivotPosition).sqrMagnitude > distanceSquared)
         {
@@ -72,22 +73,4 @@ public class Meteor : MonoBehaviour, IMeteor
             transform.Translate(Vector3.down * speed * Time.deltaTime);
         }
     }
-
-    /*
-    private void OnTriggerEnter2D(Collider2D whatIHit)
-    {
-        if (whatIHit.tag == "Player")
-        {
-            GameObject.Find("GameManager").GetComponent<GameManager>().gameOver = true;
-            Destroy(whatIHit.gameObject);
-            Destroy(this.gameObject);
-        }
-        else if (whatIHit.tag == "Laser")
-        {
-            GameObject.Find("GameManager").GetComponent<GameManager>().meteorCount++;
-            Destroy(whatIHit.gameObject);
-            Destroy(this.gameObject);
-        }
-    }
-    */
 }
