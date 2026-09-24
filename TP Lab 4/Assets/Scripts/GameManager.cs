@@ -81,11 +81,7 @@ public class GameManager : MonoBehaviour
         {
             CancelInvoke();
         }
-
-        if (Input.GetKeyDown(KeyCode.R) && gameOver)
-        {
-            SceneManager.LoadScene("Week5Lab");
-        }
+ 
 
         if (meteorCount == 5)
         {
